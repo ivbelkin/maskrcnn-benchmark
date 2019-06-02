@@ -255,7 +255,7 @@ class RTSDataset(Dataset):
 
     def prepare_data(self):
         df = pd.read_csv(self.gt_file)
-        filenames = os.listdir(self.image_folder)
+        filenames = sorted(os.listdir(self.image_folder))
         df = df.set_index("filename")
 
         annotations = []
