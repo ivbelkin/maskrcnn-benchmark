@@ -281,4 +281,4 @@ class RTSDataset(Dataset):
     @staticmethod
     def dummy_mask(box):
         x, y, w, h = box
-        return [[x, y], [x + w, y], [x + w, y + h], [x, y + h]]
+        return [[x, y, x + w, y, x + w, y + h, x, y + h]]
