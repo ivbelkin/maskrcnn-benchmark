@@ -8,26 +8,6 @@ from maskrcnn_benchmark.structures.bounding_box import BoxList
 from maskrcnn_benchmark.structures.segmentation_mask import SegmentationMask
 
 
-class Coco:
-
-    def __init__(self, data):
-        self.data = data
-
-        self.img_to_id_map = {item["filename"]: i for i, item in enumerate(data)}
-
-    def getAnnIds(self, imgIds):
-        return self.img_to_id_map[imgIds]
-
-    def loadAnns(self, annIds):
-        target = self.data[annIds]["target"].convert("xywh")
-        anno = []
-        for i in range(len(target)):
-            bbox = target.bbox[i]
-            obj = {"iscrowd": 0, "bbox": bbox, "area": bbox[2] * bbox[3]}
-            anno.append(obj)
-        return anno
-
-
 class RTSDataset(Dataset):
 
     CLASSES = (
@@ -250,9 +230,6 @@ class RTSDataset(Dataset):
         self.id_to_img_map = [item["filename"] for item in self.data]
         self.contiguous_category_id_to_json_id = RTSDataset.CLASSES
 
-        self.coco = Coco(self.data)
-
-
     def __getitem__(self, index):
         if self.keep_in_ram and "img" in self.data[index]:
             img = self.data[index]["img"]
@@ -311,3 +288,9 @@ class RTSDataset(Dataset):
     def dummy_mask(box):
         x, y, w, h = box
         return [[x, y, x + w, y, x + w, y + h, x, y + h]]
+
+    def get_groundtruth(self, image_id):
+        return self.data[image_id]["target"]
+
+    def map_class_id_to_class_name(self, class_id):
+        return self.CLASSES[class_id]
