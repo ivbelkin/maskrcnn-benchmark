@@ -270,6 +270,8 @@ class RTSDataset(Dataset):
             boxes = sdf.iloc[:, :-2].values
             masks = [RTSDataset.dummy_mask(box) for box in boxes]
             labels = [self.class_to_ind[cls] for cls in sdf["sign_class"]]
+            area = boxes[:, 2] * boxes[:, 3]
+            difficult = (area < 100).astype(int)
 
             boxes = torch.tensor(boxes, dtype=torch.float32)
             labels = torch.tensor(labels)
@@ -279,6 +281,7 @@ class RTSDataset(Dataset):
             target = BoxList(boxes, (self.W, self.H), mode="xywh").convert("xyxy")
             target.add_field("labels", labels)
             target.add_field("masks", masks)
+            target.add_field("difficult", difficult)
 
             annotations.append({"filename": filename, "target": target})
 
