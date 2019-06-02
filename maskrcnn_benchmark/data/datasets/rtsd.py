@@ -239,6 +239,7 @@ class RTSDataset(Dataset):
             self.data[index]["img"] = img
 
         target = self.data[index]["target"]
+        target.size = img.size
         target = target.clip_to_image(remove_empty=True)
 
         if self.transforms is not None:
