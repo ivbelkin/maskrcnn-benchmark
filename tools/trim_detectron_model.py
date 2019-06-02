@@ -28,7 +28,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--cfg",
-    default="configs/rtsd/e2e_mask_rcnn_X_101_32x8d_FPN_1x_caffe2.yaml",
+    default="configs/rtsd/e2e_mask_rcnn_X_101_32x8d_FPN_1x_caffe2_dev.yaml",
     help="path to config file",
     type=str,
 )
