@@ -227,6 +227,9 @@ class RTSDataset(Dataset):
 
         self.data = self.prepare_data()
 
+        self.id_to_img_map = [item["filename"] for item in self.data]
+        self.contiguous_category_id_to_json_id = RTSDataset.CLASSES
+
     def __getitem__(self, index):
         if self.keep_in_ram and "img" in self.data[index]:
             img = self.data[index]["img"]
