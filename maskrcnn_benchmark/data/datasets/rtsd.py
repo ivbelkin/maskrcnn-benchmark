@@ -260,6 +260,8 @@ class RTSDataset(Dataset):
         annotations = []
         for filename in filenames:
             sdf = df.loc[filename:filename]
+            if len(sdf) == 0:
+                continue
 
             boxes = sdf.iloc[:, :-2].values
             masks = [RTSDataset.dummy_mask(box) for box in boxes]

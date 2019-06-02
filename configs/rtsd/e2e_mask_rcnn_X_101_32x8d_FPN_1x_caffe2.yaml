@@ -1,6 +1,6 @@
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
-  WEIGHT: "catalog://Caffe2Detectron/COCO/36761843/e2e_mask_rcnn_X-101-32x8d-FPN_1x"
+  WEIGHT: "/home/ivb/.torch/models/e2e_mask_rcnn_X-101-32x8d-FPN_1x_no_last_layer.pth"
   BACKBONE:
     CONV_BODY: "R-101-FPN"
   RESNETS:
