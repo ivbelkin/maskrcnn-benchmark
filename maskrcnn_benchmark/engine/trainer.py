@@ -100,6 +100,7 @@ def do_train(
                         "{meters}",
                         "lr: {lr:.6f}",
                         "max mem: {memory:.0f}",
+                        "progress: {progress:.2f}%"
                     ]
                 ).format(
                     eta=eta_string,
@@ -107,6 +108,7 @@ def do_train(
                     meters=str(meters),
                     lr=optimizer.param_groups[0]["lr"],
                     memory=torch.cuda.max_memory_allocated() / 1024.0 / 1024.0,
+                    progress=100 % iteration / max_iter
                 )
             )
         if iteration % checkpoint_period == 0:
