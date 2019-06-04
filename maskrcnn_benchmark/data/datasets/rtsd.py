@@ -275,6 +275,7 @@ class RTSDataset(Dataset):
 
             boxes = torch.tensor(boxes, dtype=torch.float32)
             labels = torch.tensor(labels)
+            difficult = torch.tensor(difficult)
 
             masks = SegmentationMask(masks, (self.W, self.H), mode='poly')
 
