@@ -106,11 +106,23 @@ class DatasetCatalog(object):
         },
         "rtsd_d1_frames_train": {
             "gt_file": "rtsd/full-gt.csv",
-            "image_folder": "rtsd/d1_frames/train"
+            "image_folder": "rtsd/d1_frames/train",
+            "keep_empty": False
         },
         "rtsd_d1_frames_test": {
             "gt_file": "rtsd/full-gt.csv",
+            "image_folder": "rtsd/d1_frames/test",
+            "keep_empty": True
+        },
+        "cvat_d1_frames_test": {
+            "annot_xml": "rtsd/d1_frames/test/annot.xml",
             "image_folder": "rtsd/d1_frames/test"
+        },
+        "infer_d1_frames_test": {
+            "image_folder": "rtsd/d1_frames/test"
+        },
+        "infer_2018-03-16_1324_left": {
+            "image_folder": "icevision/2018-03-16_1324_left"
         }
     }
 
@@ -143,10 +155,32 @@ class DatasetCatalog(object):
             attrs = DatasetCatalog.DATASETS[name]
             args = dict(
                 gt_file=os.path.join(data_dir, attrs["gt_file"]),
-                image_folder=os.path.join(data_dir, attrs["image_folder"])
+                image_folder=os.path.join(data_dir, attrs["image_folder"]),
+                keep_empty=attrs["keep_empty"]
             )
             return dict(
                 factory="RTSDataset",
+                args=args
+            )
+        elif "cvat" in name:
+            data_dir = DatasetCatalog.DATA_DIR
+            attrs = DatasetCatalog.DATASETS[name]
+            args = dict(
+                annot_xml=os.path.join(data_dir, attrs["annot_xml"]),
+                image_folder=os.path.join(data_dir, attrs["image_folder"])
+            )
+            return dict(
+                factory="CVATDataset",
+                args=args
+            )
+        elif "infer" in name:
+            data_dir = DatasetCatalog.DATA_DIR
+            attrs = DatasetCatalog.DATASETS[name]
+            args = dict(
+                image_folder=os.path.join(data_dir, attrs["image_folder"])
+            )
+            return dict(
+                factory="InferDataset",
                 args=args
             )
         raise RuntimeError("Dataset not available: {}".format(name))

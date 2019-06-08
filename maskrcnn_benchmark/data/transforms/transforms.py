@@ -58,7 +58,7 @@ class Resize(object):
         size = self.get_size(image.size)
         image = F.resize(image, size)
         if target is None:
-            return image
+            return image, None
         target = target.resize(image.size)
         return image, target
 
@@ -116,6 +116,4 @@ class Normalize(object):
         if self.to_bgr255:
             image = image[[2, 1, 0]] * 255
         image = F.normalize(image, mean=self.mean, std=self.std)
-        if target is None:
-            return image
         return image, target

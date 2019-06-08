@@ -13,14 +13,16 @@ from ..utils.comm import all_gather
 from ..utils.comm import synchronize
 from ..utils.timer import Timer, get_time_str
 from .bbox_aug import im_detect_bbox_aug
+from maskrcnn_benchmark.data.datasets import InferDataset
 
 
 def compute_on_dataset(model, data_loader, device, timer=None):
+    assert isinstance(data_loader.dataset, InferDataset)
     model.eval()
     results_dict = {}
     cpu_device = torch.device("cpu")
     for _, batch in enumerate(tqdm(data_loader)):
-        images, targets, image_ids = batch
+        images, meta, image_ids = batch
         with torch.no_grad():
             if timer:
                 timer.tic()
@@ -34,7 +36,8 @@ def compute_on_dataset(model, data_loader, device, timer=None):
                 timer.toc()
             output = [o.to(cpu_device) for o in output]
         results_dict.update(
-            {img_id: result for img_id, result in zip(image_ids, output)}
+            {img_id: {"result": result.resize(size), "filename": filename}
+                for img_id, result, (size, filename) in zip(image_ids, output, meta)}
         )
     return results_dict
 
@@ -106,15 +109,3 @@ def inference(
 
     if output_folder:
         torch.save(predictions, os.path.join(output_folder, "predictions.pth"))
-
-    extra_args = dict(
-        box_only=box_only,
-        iou_types=iou_types,
-        expected_results=expected_results,
-        expected_results_sigma_tol=expected_results_sigma_tol,
-    )
-
-    return evaluate(dataset=dataset,
-                    predictions=predictions,
-                    output_folder=output_folder,
-                    **extra_args)
