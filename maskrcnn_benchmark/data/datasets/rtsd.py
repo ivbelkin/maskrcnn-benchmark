@@ -212,10 +212,11 @@ class RTSDataset(Dataset):
         '8_8'
     )
 
-    def __init__(self, gt_file, image_folder, keep_in_ram=False, transforms=None):
+    def __init__(self, gt_file, image_folder, keep_empty, keep_in_ram=False, transforms=None):
         super().__init__()
         self.gt_file = gt_file
         self.image_folder = image_folder
+        self.keep_empty = keep_empty
         self.keep_in_ram = keep_in_ram
         self.transforms = transforms
 
@@ -264,7 +265,7 @@ class RTSDataset(Dataset):
         annotations = []
         for filename in filenames:
             sdf = df.loc[filename:filename]
-            if len(sdf) == 0:
+            if not self.keep_empty and len(sdf) == 0:
                 continue
 
             boxes = sdf.iloc[:, :-2].values
