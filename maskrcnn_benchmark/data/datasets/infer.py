@@ -27,7 +27,7 @@ class InferDataset(Dataset):
                 logger.error("Cannot open file {} as image".format(filename))
 
     def __len__(self):
-        return len(self.filenames[:2000])
+        return len(self.filenames)
 
     def __getitem__(self, index):
         filename = self.filenames[index]

@@ -123,6 +123,16 @@ class DatasetCatalog(object):
         },
         "infer_2018-03-16_1324_left": {
             "image_folder": "icevision/2018-03-16_1324_left"
+        },
+        "infer_2018-02-13_1523_left_train_selected": {
+            "image_folder": "icevision/2018-02-13_1523_left_train_selected"
+        },
+        "infer_2018-02-13_1523_left_test": {
+            "image_folder": "icevision/2018-02-13_1523_left_test"
+        },
+        "cvat_RTSD_full": {
+            "annot_xml": "../../deploy/annotations/rtsd_full.xml",
+            "image_folder": "rtsd/full"
         }
     }
 
