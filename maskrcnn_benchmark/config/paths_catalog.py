@@ -214,11 +214,28 @@ class DatasetCatalog(object):
         "infer_2018-03-23_1352_right_online_final": {
             "image_folder": "icevision/final/2018-03-23_1352_right"
         },
+
+        # FOR DEBUG
+        "cvat_sample": {
+            "root_dir": "/home/ivb/deploy"
+        }
     }
 
     @staticmethod
     def get(name):
-        if "coco" in name:
+        if name == "cvat_sample":
+            attrs = DatasetCatalog.DATASETS[name]
+            root = attrs["root_dir"]
+            args = dict(
+                annot_xml=os.path.join(root, "sample", "annot.xml"),
+                labels_file=os.path.join(root, "icevision", "icevision_offline_labels.txt"),
+                image_folder=os.path.join(root, "sample", "images")
+            )
+            return dict(
+                factory="CVATDataset",
+                args=args
+            )
+        elif "coco" in name:
             data_dir = DatasetCatalog.DATA_DIR
             attrs = DatasetCatalog.DATASETS[name]
             args = dict(
