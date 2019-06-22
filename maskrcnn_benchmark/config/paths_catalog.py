@@ -121,19 +121,99 @@ class DatasetCatalog(object):
         "infer_d1_frames_test": {
             "image_folder": "rtsd/d1_frames/test"
         },
-        "infer_2018-03-16_1324_left": {
+        "infer_2018-03-16_1324_left": {  # TEST
             "image_folder": "icevision/2018-03-16_1324_left"
         },
         "infer_2018-02-13_1523_left_train_selected": {
             "image_folder": "icevision/2018-02-13_1523_left_train_selected"
         },
-        "infer_2018-02-13_1523_left_test": {
-            "image_folder": "icevision/2018-02-13_1523_left_test"
+        "infer_2018-02-13_1523_left": {  # TEST
+            "image_folder": "icevision/2018-02-13_1523_left"
         },
+
         "cvat_RTSD_full": {
-            "annot_xml": "../../deploy/annotations/rtsd_full.xml",
+            "annot_xml": "../../deploy/annotations/rtsd_new_masks.xml",
+            "labels_file": "../../deploy/icevision/rtsd_labels_new.txt",
             "image_folder": "rtsd/full"
-        }
+        },
+
+        "cvat_2018-02-13_1418_left_offline": {
+            "annot_xml": "../../deploy/annotations/icevision_2018-02-13_1418_left_masks.xml",
+            "labels_file": "../../deploy/icevision/icevision_offline_labels.txt",
+            "image_folder": "icevision/2018-02-13_1418_left"
+        },
+        "cvat_2018-02-13_1523_left_offline": {
+            "annot_xml": "../../deploy/annotations/icevision_2018-02-13_1523_left_masks.xml",
+            "labels_file": "../../deploy/icevision/icevision_offline_labels.txt",
+            "image_folder": "icevision/2018-02-13_1523_left"
+        },
+        "cvat_2018-03-07_1322_right_offline": {
+            "annot_xml": "../../deploy/annotations/icevision_2018-03-07_1322_right_masks.xml",
+            "labels_file": "../../deploy/icevision/icevision_offline_labels.txt",
+            "image_folder": "icevision/2018-03-07_1322_right"
+        },
+        "cvat_2018-03-07_1325_left_offline": {
+            "annot_xml": "../../deploy/annotations/icevision_2018-03-07_1325_left_masks.xml",
+            "labels_file": "../../deploy/icevision/icevision_offline_labels.txt",
+            "image_folder": "icevision/2018-03-07_1325_left"
+        },
+        "cvat_2018-03-07_1336_right_offline": {
+            "annot_xml": "../../deploy/annotations/icevision_2018-03-07_1336_right_masks.xml",
+            "labels_file": "../../deploy/icevision/icevision_offline_labels.txt",
+            "image_folder": "icevision/2018-03-07_1336_right"
+        },
+        "cvat_2018-03-07_1357_right_offline": {
+            "annot_xml": "../../deploy/annotations/icevision_2018-03-07_1357_right_masks.xml",
+            "labels_file": "../../deploy/icevision/icevision_offline_labels.txt",
+            "image_folder": "icevision/2018-03-07_1357_right"
+        },
+        "cvat_2018-03-16_1316_left_offline": {
+            "annot_xml": "../../deploy/annotations/icevision_2018-03-16_1316_left_masks.xml",
+            "labels_file": "../../deploy/icevision/icevision_offline_labels.txt",
+            "image_folder": "icevision/2018-03-16_1316_left"
+        },
+        "cvat_2018-03-16_1347_left_offline": {
+            "annot_xml": "../../deploy/annotations/icevision_2018-03-16_1347_left_masks.xml",
+            "labels_file": "../../deploy/icevision/icevision_offline_labels.txt",
+            "image_folder": "icevision/2018-03-16_1347_left"
+        },
+        "cvat_2018-03-16_1418_left_offline": {
+            "annot_xml": "../../deploy/annotations/icevision_2018-03-16_1418_left_masks.xml",
+            "labels_file": "../../deploy/icevision/icevision_offline_labels.txt",
+            "image_folder": "icevision/2018-03-16_1418_left"
+        },
+        "cvat_2018-03-07_1354_right_offline": {
+            "annot_xml": "../../deploy/annotations/icevision_2018-03-07_1354_right_masks.xml",
+            "labels_file": "../../deploy/icevision/icevision_offline_labels.txt",
+            "image_folder": "icevision/2018-03-07_1354_right"
+        },
+        "cvat_2018-03-02_1239_right_offline": {
+            "annot_xml": "../../deploy/annotations/icevision_2018-03-02_1239_right_masks.xml",
+            "labels_file": "../../deploy/icevision/icevision_offline_labels.txt",
+            "image_folder": "icevision/2018-03-02_1239_right"
+        },
+
+        "cvat_2018-02-13_1523_left_test_offline": {
+            "annot_xml": "../../deploy/annotations/icevision_2018-02-13_1523_left_test_masks.xml",
+            "labels_file": "../../deploy/icevision/icevision_offline_labels.txt",
+            "image_folder": "icevision/2018-02-13_1523_left"
+        },
+        "cvat_2018-03-16_1324_left_offline": {
+            "annot_xml": "../../deploy/annotations/icevision_2018-03-16_1324_left_masks.xml",
+            "labels_file": "../../deploy/icevision/icevision_offline_labels.txt",
+            "image_folder": "icevision/2018-03-16_1324_left"
+        },
+
+        # ONLINE FINAL
+        "infer_2018-02-16_1515_left_online_final": {
+            "image_folder": "icevision/final/2018-02-16_1515_left"
+        },
+        "infer_2018-03-16_1424_left_online_final": {
+            "image_folder": "icevision/final/2018-03-16_1424_left"
+        },
+        "infer_2018-03-23_1352_right_online_final": {
+            "image_folder": "icevision/final/2018-03-23_1352_right"
+        },
     }
 
     @staticmethod
@@ -177,6 +257,7 @@ class DatasetCatalog(object):
             attrs = DatasetCatalog.DATASETS[name]
             args = dict(
                 annot_xml=os.path.join(data_dir, attrs["annot_xml"]),
+                labels_file=os.path.join(data_dir, attrs["labels_file"]),
                 image_folder=os.path.join(data_dir, attrs["image_folder"])
             )
             return dict(

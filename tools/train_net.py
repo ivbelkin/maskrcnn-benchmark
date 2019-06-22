@@ -33,10 +33,21 @@ except ImportError:
     raise ImportError('Use APEX for multi-precision via apex.amp')
 
 
-def train(cfg, local_rank, distributed):
+def train(cfg, local_rank, distributed, finetune_head):
     model = build_detection_model(cfg)
     device = torch.device(cfg.MODEL.DEVICE)
     model.to(device)
+
+    if finetune_head:
+        for p in model.parameters():
+            p.requires_grad = False
+
+        model.roi_heads.box.predictor.cls_score.weight.requires_grad = True
+        model.roi_heads.box.predictor.cls_score.bias.requires_grad = True
+        model.roi_heads.box.predictor.bbox_pred.weight.requires_grad = True
+        model.roi_heads.box.predictor.bbox_pred.bias.requires_grad = True
+        model.roi_heads.mask.predictor.mask_fcn_logits.weight.requires_grad = True
+        model.roi_heads.mask.predictor.mask_fcn_logits.bias.requires_grad = True
 
     optimizer = make_optimizer(cfg, model)
     scheduler = make_lr_scheduler(cfg, optimizer)
@@ -137,6 +148,10 @@ def main():
         action="store_true",
     )
     parser.add_argument(
+        "--finetune-head",
+        action="store_true"
+    )
+    parser.add_argument(
         "opts",
         help="Modify config options using the command-line",
         default=None,
@@ -181,7 +196,7 @@ def main():
     # save overloaded model config in the output directory
     save_config(cfg, output_config_path)
 
-    model = train(cfg, args.local_rank, args.distributed)
+    model = train(cfg, args.local_rank, args.distributed, args.finetune_head)
 
     if not args.skip_test:
         run_test(cfg, model, args.distributed)

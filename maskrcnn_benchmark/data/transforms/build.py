@@ -6,12 +6,13 @@ def build_transforms(cfg, is_train=True):
     if is_train:
         min_size = cfg.INPUT.MIN_SIZE_TRAIN
         max_size = cfg.INPUT.MAX_SIZE_TRAIN
-        flip_horizontal_prob = 0.5  # cfg.INPUT.FLIP_PROB_TRAIN
+        flip_horizontal_prob = cfg.INPUT.HORIZONTAL_FLIP_PROB_TRAIN
         flip_vertical_prob = cfg.INPUT.VERTICAL_FLIP_PROB_TRAIN
         brightness = cfg.INPUT.BRIGHTNESS
         contrast = cfg.INPUT.CONTRAST
         saturation = cfg.INPUT.SATURATION
         hue = cfg.INPUT.HUE
+        crop_prob = cfg.INPUT.CROP_PROB
     else:
         min_size = cfg.INPUT.MIN_SIZE_TEST
         max_size = cfg.INPUT.MAX_SIZE_TEST
@@ -21,6 +22,7 @@ def build_transforms(cfg, is_train=True):
         contrast = 0.0
         saturation = 0.0
         hue = 0.0
+        crop_prob = 0.0
 
     to_bgr255 = cfg.INPUT.TO_BGR255
     normalize_transform = T.Normalize(
@@ -35,6 +37,7 @@ def build_transforms(cfg, is_train=True):
 
     transform = T.Compose(
         [
+            T.IcevisionCrop(crop_prob),
             color_jitter,
             T.Resize(min_size, max_size),
             T.RandomHorizontalFlip(flip_horizontal_prob),

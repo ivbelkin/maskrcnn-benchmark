@@ -3,7 +3,13 @@ import random
 
 import torch
 import torchvision
+from maskrcnn_benchmark.structures.bounding_box import BoxList
+from maskrcnn_benchmark.structures.segmentation_mask import SegmentationMask
 from torchvision.transforms import functional as F
+import numpy as np
+from PIL import Image
+from shapely import geometry, affinity
+from shapely.geometry import Polygon
 
 
 class Compose(object):
@@ -56,7 +62,7 @@ class Resize(object):
 
     def __call__(self, image, target=None):
         size = self.get_size(image.size)
-        image = F.resize(image, size)
+        image = F.resize(image, size, Image.LANCZOS)
         if target is None:
             return image, None
         target = target.resize(image.size)
@@ -117,3 +123,83 @@ class Normalize(object):
             image = image[[2, 1, 0]] * 255
         image = F.normalize(image, mean=self.mean, std=self.std)
         return image, target
+
+
+class IcevisionCrop(object):
+    def __init__(self, p=0):
+        self.p = p
+
+    def __call__(self, image, target):
+        size = image.size
+        try:
+            if np.random.uniform() < self.p:
+                keep = []
+                tries = 0
+                while len(keep) == 0:
+                    crop_box = self._gen_crop_points(size)
+                    crop_size = (crop_box[2] - crop_box[0], crop_box[3] - crop_box[1])
+                    crop_polygon = geometry.box(*crop_box)
+                    keep = self._get_keep_idxs(target, crop_polygon)
+                    tries += 1
+                    if tries >= 10:
+                        break
+
+                if len(keep) > 0:
+                    xoff, yoff = crop_box[:2]
+                    boxes, masks, labels = [], [], []
+                    for i in keep:
+                        box = target.bbox[i]
+                        polygon = geometry.box(*box)
+                        polygon = crop_polygon.intersection(polygon)
+                        polygon = affinity.translate(polygon, -xoff, -yoff)
+                        box = polygon.bounds
+                        boxes.append(box)
+
+                        mask = target.get_field("masks")[i].instances.polygons[0].polygons
+                        assert len(mask) == 1
+                        polygon = Polygon(mask[0].view(-1, 2))
+                        polygon = crop_polygon.intersection(polygon)
+                        polygon = affinity.translate(polygon, -xoff, -yoff)
+                        mask = [coord for point in polygon.exterior.coords for coord in point]
+                        masks.append([mask])
+
+                        labels.append(target.get_field("labels")[i])
+
+                    boxes = torch.tensor(boxes, dtype=torch.float32)
+                    labels = torch.tensor(labels)
+
+                    masks = SegmentationMask(masks, crop_size, mode='poly')
+
+                    target = BoxList(boxes, crop_size, mode="xyxy")
+                    target.add_field("labels", labels)
+                    target.add_field("masks", masks)
+
+                    image = image.crop(crop_box).resize(size, resample=Image.LANCZOS)
+                    target = target.resize(size)
+        except:
+            print("Oops!")
+
+        return image, target
+
+    @staticmethod
+    def _gen_crop_points(image_size):
+        bottom = np.random.randint(1100, 1300)
+        h = np.random.randint(600, bottom)
+        w = int(h * image_size[0] / image_size[1])
+        max_delta_w = int(w * 0.05)
+        w += np.random.randint(-max_delta_w, max_delta_w + 1)
+        left = np.random.randint(0, image_size[0] - w)
+        return left, bottom - h, left + w, bottom
+
+    @staticmethod
+    def _get_keep_idxs(target, crop_polygon):
+        keep = []
+        for i, box in enumerate(target.bbox):
+            polygon = geometry.box(*box)
+            polygon = crop_polygon.intersection(polygon)
+            box = polygon.bounds
+            if len(box) > 0:
+                m = min(np.abs(box[0] - box[2]), np.abs(box[1] - box[3]))
+                if m >= 24:
+                    keep.append(i)
+        return keep

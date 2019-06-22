@@ -1,8 +1,8 @@
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
-  WEIGHT: "/home/ivb/.torch/models/e2e_mask_rcnn_X-101-32x8d-FPN_1x_no_last_layer.pth"
+  WEIGHT: "/home/ivb/nvme/icevision/rtsd_train/1/model_final_trim.pth"
   BACKBONE:
-    FREEZE_CONV_BODY_AT: 5
+    FREEZE_CONV_BODY_AT: 4
     CONV_BODY: "R-101-FPN"
   RESNETS:
     BACKBONE_OUT_CHANNELS: 256
@@ -20,7 +20,7 @@ MODEL:
   ROI_HEADS:
     USE_FPN: True
   ROI_BOX_HEAD:
-    NUM_CLASSES: 205
+    NUM_CLASSES: 12
     POOLER_RESOLUTION: 7
     POOLER_SCALES: (0.25, 0.125, 0.0625, 0.03125)
     POOLER_SAMPLING_RATIO: 2
@@ -36,13 +36,20 @@ MODEL:
     SHARE_BOX_FEATURE_EXTRACTOR: False
   MASK_ON: True
 DATASETS:
-  TRAIN: ("cvat_RTSD_full",)
+  TRAIN: ("cvat_2018-02-13_1418_left_offline", "cvat_2018-02-13_1523_left_offline", "cvat_2018-03-07_1322_right_offline", "cvat_2018-03-07_1325_left_offline", "cvat_2018-03-07_1336_right_offline", "cvat_2018-03-07_1357_right_offline", "cvat_2018-03-16_1316_left_offline", "cvat_2018-03-16_1347_left_offline", "cvat_2018-03-16_1418_left_offline", "cvat_2018-03-07_1354_right_offline", "cvat_2018-03-02_1239_right_offline", "cvat_2018-02-13_1523_left_test_offline", "cvat_2018-03-16_1324_left_offline")
 DATALOADER:
   SIZE_DIVISIBILITY: 32
 SOLVER:
   IMS_PER_BATCH: 8
-  BASE_LR: 0.01
+  BASE_LR: 0.001
   MAX_ITER: 224000
-  STEPS: (128000, 192000)
+  STEPS: (44000,)
   CHECKPOINT_PERIOD: 4000
 PATHS_CATALOG: "/home/ivb/deploy/maskrcnn-benchmark/maskrcnn_benchmark/config/paths_catalog.py"
+INPUT:
+  BRIGHTNESS: 0.05
+  CONTRAST: 0.05
+  SATURATION: 0.05
+  HUE: 0.05
+  CROP_PROB: 0.7
+  HORIZONTAL_FLIP_PROB_TRAIN: 0.5
