@@ -134,7 +134,8 @@ class DatasetCatalog(object):
         "cvat_RTSD_full": {
             "annot_xml": "../../deploy/annotations/rtsd_new_masks.xml",
             "labels_file": "../../deploy/icevision/rtsd_labels_new.txt",
-            "image_folder": "rtsd/full"
+            "image_folder": "rtsd/full",
+            "min_side": -1
         },
 
         "cvat_2018-02-13_1418_left_offline": {
@@ -277,6 +278,8 @@ class DatasetCatalog(object):
                 labels_file=os.path.join(data_dir, attrs["labels_file"]),
                 image_folder=os.path.join(data_dir, attrs["image_folder"])
             )
+            if "min_side" in attrs:
+                args["min_side"] = attrs["min_side"]
             return dict(
                 factory="CVATDataset",
                 args=args
